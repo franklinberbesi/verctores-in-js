@@ -1,91 +1,92 @@
 // Clase Cl_mArticulo
 class Cl_mArticulo {
+  // Campos privados (solo accesibles dentro de la clase)
   #codigo;
   #nombre;
   #costo;
 
+  // Constructor que recibe un objeto con propiedades desestructuradas
   constructor({ codigo, nombre, costo }) {
-    this.#codigo = codigo;
-    this.#nombre = nombre;
-    this.#costo = costo;
+    this.#codigo = codigo;  // Asigna código
+    this.#nombre = nombre;  // Asigna nombre
+    this.#costo = costo;    // Asigna costo base
   }
 
+  // Método para calcular precio con 25% de ganancia
   precio() {
     return this.#costo * 1.25;
   }
 
-  get codigo() {
-    return this.#codigo;
-  }
-
-  get nombre() {
-    return this.#nombre;
-  }
-
-  get costo() {
-    return this.#costo;
-  }
+  // Getters para acceder a propiedades privadas
+  get codigo() { return this.#codigo; }
+  get nombre() { return this.#nombre; }
+  get costo() { return this.#costo; }
 }
 
-// Clase Cl_mFactura
+//clase Cl_mFactura
 class Cl_mFactura {
+  // Campos privados
   #codigo;
   #fecha;
-  #articulos;
+  #articulos; // Array de objetos {codigo, cantidad}
 
   constructor({ codigo, fecha }) {
-    this.#codigo = codigo;
-    this.#fecha = fecha;
-    this.#articulos = [];
+    this.#codigo = codigo;  // Código único de factura
+    this.#fecha = fecha;    // Fecha de emisión
+    this.#articulos = [];   // Inicializa array vacío
   }
 
+  // Método para obtener información detallada de la factura
   info(articulos) {
     return this.#articulos.map((item) => {
+      // Busca el artículo correspondiente en el listado general
       const articulo = articulos.articulos.find((a) => a.codigo === item.codigo);
+      
+      // Retorna objeto con datos formateados
       return {
-        codigo: item.codigo,
-        nombre: articulo.nombre,
-        cantidad: item.cantidad,
-        precio: articulo.precio(),
-        subtotal: item.cantidad * articulo.precio(),
+        codigo: item.codigo,       // Código del artículo
+        nombre: articulo.nombre,   // Nombre del artículo
+        cantidad: item.cantidad,   // Cantidad comprada
+        precio: articulo.precio(), // Precio con 25% de ganancia
+        subtotal: item.cantidad * articulo.precio() // Total por artículo
       };
     });
   }
 
+  // Método para agregar artículos a la factura
   agregarArticulo(codigo, cantidad) {
-    this.#articulos.push({ codigo, cantidad });
+    this.#articulos.push({ codigo, cantidad }); // Añade al array
   }
 
-  get codigo() {
-    return this.#codigo;
-  }
-
-  get fecha() {
-    return this.#fecha;
-  }
+  // Getters
+  get codigo() { return this.#codigo; }
+  get fecha() { return this.#fecha; }
 }
 
-// Clase Cl_mArticulos
+//Clase Cl_mArticulo
 class Cl_mArticulos {
-  #articulos;
+  #articulos; // Array de objetos Cl_mArticulo
 
   constructor() {
-    this.#articulos = [];
+    this.#articulos = []; // Inicializa array vacío
   }
 
+  // Agrega un artículo al listado
   agregarArticulo(articulo) {
     this.#articulos.push(articulo);
   }
 
+  // Genera listado público de artículos
   listado() {
     return this.#articulos.map((articulo) => ({
       codigo: articulo.codigo,
       nombre: articulo.nombre,
       costo: articulo.costo,
-      precio: articulo.precio(),
+      precio: articulo.precio() // Usa el método precio()
     }));
   }
 
+  // Getter para acceder al array interno
   get articulos() {
     return this.#articulos;
   }
@@ -93,38 +94,42 @@ class Cl_mArticulos {
 
 // Clase Cl_mFacturas
 class Cl_mFacturas {
-  #facturas;
+  #facturas; // Array de objetos Cl_mFactura
 
   constructor() {
-    this.#facturas = [];
+    this.#facturas = []; // Inicializa array vacío
   }
 
+  // Agrega factura al listado
   agregarFactura(factura) {
     this.#facturas.push(factura);
   }
 
+  // Genera reporte de todas las facturas
   listado(articulos) {
     return this.#facturas.map((factura) => {
-      const info = factura.info(articulos);
-      const totalPagado = info.reduce((sum, item) => sum + item.subtotal, 0);
+      const info = factura.info(articulos); // Obtiene detalle de artículos
+      const totalPagado = info.reduce((sum, item) => sum + item.subtotal, 0); // Suma subtotales
+      
       return {
         fecha: factura.fecha,
         codigo: factura.codigo,
-        cantArticulos: factura.info(articulos).length,
-        totalPagado: totalPagado,
+        cantArticulos: factura.info(articulos).length, // Cantidad de items
+        totalPagado: totalPagado // Total de la factura
       };
     });
   }
 
+  // Calcula el total de todas las ventas
   totalVendido(articulos) {
     return this.#facturas.reduce((total, factura) => {
-      const subtotal = factura
-        .info(articulos)
-        .reduce((sum, item) => sum + item.subtotal, 0);
-      return total + subtotal;
+      const subtotal = factura.info(articulos)
+        .reduce((sum, item) => sum + item.subtotal, 0); // Suma por factura
+      return total + subtotal; // Acumula total general
     }, 0);
   }
 
+  // Getter para acceder al array interno
   get facturas() {
     return this.#facturas;
   }
@@ -161,6 +166,9 @@ console.log(articulos.listado());
 
 console.log("\n----- Detalle de Factura F1 -----");
 console.log(factura1.info(articulos));
+
+console.log("\n----- Detalle de Factura F2 -----");
+console.log(factura2.info(articulos));
 
 console.log("\n----- Listado General de Facturas -----");
 console.log(facturas.listado(articulos));

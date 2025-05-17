@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Metrópolis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Encabezado -->
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">🏪 Tienda Metrópolis</h1>
+            <div class="flex gap-4 justify-center mb-6">
+                <button onclick="showSection('articulos')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Artículos</button>
+                <button onclick="showSection('facturas')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Facturas</button>
+                <button onclick="showSection('reportes')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Reportes</button>
+            </div>
+        </header>
+
+        <!-- Sección Artículos -->
+        <section id="articulos" class="section-active">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4">📦 Administrar Artículos</h2>
+
+                <!-- Formulario Nuevo Artículo -->
+                <form id="formArticulo" class="mb-6 grid grid-cols-3 gap-4">
+                    <input type="text" placeholder="Código" id="articuloCodigo" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    <input type="text" placeholder="Nombre" id="articuloNombre" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    <input type="number" placeholder="Costo" id="articuloCosto" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" step="0.01"
+                        required>
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors col-span-3">➕ Agregar Artículo</button>
+                </form>
+
+                <!-- Listado Artículos -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Código</th>
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nombre</th>
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Costo</th>
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Precio</th>
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="articulosList" class="divide-y divide-gray-200">
+                            <!-- JS populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Facturas -->
+        <section id="facturas" class="hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4">🧾 Generar Facturas</h2>
+
+                <!-- Formulario Nueva Factura -->
+                <form id="formFactura" class="mb-6 grid grid-cols-3 gap-4">
+                    <input type="text" placeholder="Código Factura" id="facturaCodigo" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    <input type="date" id="facturaFecha" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    <div class="col-span-3 grid grid-cols-3 gap-4">
+                        <select id="articuloSelect" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="">Seleccione artículo</option>
+                        </select>
+                        <input type="number" placeholder="Cantidad" id="articuloCantidad" class="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" min="1">
+                        <button type="button" onclick="addItemToFactura()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">➕ Agregar Item</button>
+                    </div>
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors col-span-3">💾 Guardar Factura</button>
+                </form>
+
+                <!-- Items de Factura Actual -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Items Actuales</h3>
+                    <div id="facturaItems" class="space-y-2">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+                <!-- Listado Facturas -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Código</th>
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Fecha</th>
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Artículos</th>
+                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="facturasList" class="divide-y divide-gray-200">
+                            <!-- JS populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Reportes -->
+        <section id="reportes" class="hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4">📊 Reportes de Ventas</h2>
+
+                <!-- Tarjetas Resumen -->
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="text-blue-600 font-semibold">Total Vendido</h3>
+                        <p class="text-2xl" id="totalVendido">$0.00</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="text-green-600 font-semibold">Facturas Emitidas</h3>
+                        <p class="text-2xl" id="totalFacturas">0</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h3 class="text-purple-600 font-semibold">Artículos en Stock</h3>
+                        <p class="text-2xl" id="totalArticulos">0</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Mostrar sección activa y ocultar las demás
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('section-active');
+            });
+
+            // Mostrar sección seleccionada
+            const activeSection = document.getElementById(sectionId);
+            activeSection.classList.remove('hidden');
+            activeSection.classList.add('section-active');
+
+            // Actualizar botones activos
+            document.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'hover:bg-gray-300');
+            });
+
+            event.target.classList.add('bg-blue-600', 'text-white');
+            event.target.classList.remove('bg-gray-200');
+        }
+    </script>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
